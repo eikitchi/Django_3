@@ -1,9 +1,14 @@
 from django.shortcuts import render
+from main.models import Product
 
 
 # Create your views here.
 def home(request):
-    return render(request, 'main/home.html')
+    context = {
+        'product_list': Product.objects.all()[:4],
+        'title': 'Список продуктов'
+    }
+    return render(request, 'main/home.html', context)
 
 
 def info(request):

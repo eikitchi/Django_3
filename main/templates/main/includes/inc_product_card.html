@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% for object in product_list %}
+        <div class="col-lg-4">
+            <img src="{% static 'images/apple.jpg' %}" alt="My Image">
+{#            <img class="rounded-circle"#}
+{#                 src="{% object.preview.url %}"#}
+{#                 alt="Generic placeholder image" width="140" height="140">#}
+            <h2>{{ object.name }}</h2>
+            <p>{{ object.description }}</p>
+            <p><a class="btn btn-secondary" href="#" role="button">Посмотреть &raquo;</a></p>
+        </div>
+    {% endfor %}
+</head>
+<body>
+
+</body>
+</html>
