@@ -3,16 +3,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+{#    <title>{{ title }}</title>#}
     {% for object in product_list %}
         <div class="col-lg-4">
-            <img src="{% static 'images/apple.jpg' %}" alt="My Image">
-{#            <img class="rounded-circle"#}
-{#                 src="{% object.preview.url %}"#}
-{#                 alt="Generic placeholder image" width="140" height="140">#}
-            <h2>{{ object.name }}</h2>
-            <p>{{ object.description }}</p>
-            <p><a class="btn btn-secondary" href="#" role="button">Посмотреть &raquo;</a></p>
+            <div class="card m-2 text-center">
+                <div class="card-body">
+                    {#            <img src="{% static "/media/images/apple.png" %}" alt="My image">#}
+                    {% if  object.preview %}
+                        <img src={{ object.preview.url }} class="rounded-circle" alt={{ object.name }} width="140" height="140">
+                    {% endif %}
+                    {#            <img src="{{ object.preview.url }}"  alt="image">#}
+                    {#            <img class="rounded-circle"#}
+                    {#                 src="{% object.preview.url %}"#}
+                    {#                 alt="Generic placeholder image" width="140" height="140">#}
+                    <h2>{{ object.name | title }}</h2>
+                    <p>{{ object.description | title}}</p>
+                    <p><a class="btn btn-secondary" href="{% url 'main:product_item' object.pk %}" role="button">Подробнее >></a></p>
+                </div>
+            </div>
         </div>
     {% endfor %}
 </head>

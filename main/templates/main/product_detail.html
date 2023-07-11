@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="col">
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <tr>
+                <td>Наименование</td>
+                <td>{{ object.name }}</td>
+            </tr>
+             <tr>
+                <td>Описание</td>
+                <td>{{ object.description }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'main:product_list' %}" class="btn btn-primary">Назад к списку</a>
+    </div>
+</div>
+</div>
+    {% include 'main/includes/inc_product_card.html' %}
+{% endblock %}
