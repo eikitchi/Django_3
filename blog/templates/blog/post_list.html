@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Публикации</h1>
+</div>
+
+<div class="col-12">
+        <a href="{% url 'blog:post_create' %}" class="btn btn-primary">Создать публикацию</a>
+</div>
+
+<div class="container">
+    {% if object_list %}
+        <div class="row text-center">
+            {% for object in object_list %}
+            {% include 'blog/includes/inc_post_card.html' %}
+            {% endfor %}
+    </div>
+    {% else %}
+        <h3>Публикаций нет</h3>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 import os
 
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 
 from config import settings
@@ -51,6 +52,23 @@ def product(request, pk):
         'title': product_item
     }
     return render(request, 'main/product_detail.html', context)
+
+
+class ProductCreateView(generic.CreateView):
+    model = Product
+    fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
+    success_url = reverse_lazy('main:product_list')
+
+
+class ProductUpdateView(generic.UpdateView):
+    model = Product
+    fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
+    success_url = reverse_lazy('main:product_list')
+
+
+class ProductDeleteView(generic.DeleteView):
+    model = Product
+    success_url = reverse_lazy('main:product_list')
 
 
 def info(request):

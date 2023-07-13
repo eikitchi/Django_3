@@ -19,6 +19,9 @@
                     <h2>{{ object.name | title }}</h2>
                     <p>{{ object.description | title}}</p>
                     <p><a class="btn btn-secondary" href="{% url 'main:product_item' object.pk %}" role="button">Подробнее >></a></p>
+                    <p><a class="btn btn-warning" href="{% url 'main:product_update' object.pk %}" role="button">Редактировать >></a></p>
+                    <p><a class="btn btn-danger" href="{% url 'main:product_delete' object.pk %}" role="button">Удалить >></a></p>
+
                 </div>
             </div>
         </div>

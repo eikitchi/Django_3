@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="col">
+<div class="card">
+    <div class="card-body">
+       <form method="post">
+           {% csrf_token %}
+           Уверены, что хотите удалить товар "{{ object }}"?<br>
+           <input type="submit" class="btn btn-outline-danger" value="Уверен">
+       </form>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'main:product_list' %}" class="btn btn-primary">Назад к списку</a>
+    </div>
+</div>
+</div>
+    {% include 'main/includes/inc_product_card.html' %}
+{% endblock %}

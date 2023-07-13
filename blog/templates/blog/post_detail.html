@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+
+
+
+{% block content %}
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td>Заголовок</td>
+                        <td>{{ object.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Содержимое</td>
+                        <td>{{ object.content }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Дата публикации</td>
+                        <td>{{ object.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Количество просмотров</td>
+                        <td>{{ object.view_count }}</td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'blog:post_list' %}" class="btn btn-primary"><< Назад</a>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
