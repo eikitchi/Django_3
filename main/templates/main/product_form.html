@@ -4,15 +4,13 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
+                <div class="card-title">
+                    Добавление продукции
+                </div>
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <input type="submit" class="btn btn-primary"
-                           value="{% if object %}Сохранить{% else %}Создать{% endif %}">
-                </form>
-            </div>
-            <div class="card-footer">
-                <a href="{% url 'main:product_list' %}" class="btn btn-primary">Назад к списку</a>
+	@@ -19,5 +19,5 @@
             </div>
         </div>
     </div>

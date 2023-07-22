@@ -1,11 +1,14 @@
 import os
 
+from django.forms import inlineformset_factory
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.views.generic import ListView
 
 from config import settings
-from main.models import Product
+from main.forms import ProductForm, VersionForm
+from main.models import Product, Version
 
 
 # Create your views here.
@@ -62,13 +65,41 @@ class ProductCreateView(generic.CreateView):
 
 class ProductUpdateView(generic.UpdateView):
     model = Product
-    fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
+    form_class = ProductForm
+    template_name = 'main/product_form_with_formset.html'
+    # fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
     success_url = reverse_lazy('main:product_list')
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('main:product_update', args=[self.get_object().pk])
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = VersionFormset(instance=self.object)
+        return context_data
+
+    def form_valid(self, form):
+        context_data = self.get_context_data()
+        formset = context_data['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+
+        return super().form_valid(form)
 
 
 class ProductDeleteView(generic.DeleteView):
     model = Product
     success_url = reverse_lazy('main:product_list')
+
+
+class VersionListView(ListView):
+    model = Version
 
 
 def info(request):
