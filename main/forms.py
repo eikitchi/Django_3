@@ -1,5 +1,5 @@
 from django import forms
-from main.models import Product, Version
+from main.models import Product, Version, Category
 
 
 class FormStyleMixin:
@@ -13,10 +13,12 @@ class FormStyleMixin:
 
 class ProductForm(FormStyleMixin, forms.ModelForm):
     forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
+    new_category = forms.CharField(max_length=150, required=False, label='Новая категория')
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Выберите категорию или создайте новую', required=False)
 
     class Meta:
         model = Product
-        fields = ('name', 'description', 'preview', 'category', 'price',)
+        fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
 
     def clean_name(self):
         cleaned_name = self.cleaned_data['name']

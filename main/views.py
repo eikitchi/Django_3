@@ -8,7 +8,7 @@ from django.views.generic import ListView
 
 from config import settings
 from main.forms import ProductForm, VersionForm
-from main.models import Product, Version
+from main.models import Product, Version, Category
 
 
 # Create your views here.
@@ -59,8 +59,23 @@ def product(request, pk):
 
 class ProductCreateView(generic.CreateView):
     model = Product
-    fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
+    form_class = ProductForm
+    template_name = 'main/product_form_with_formset.html'
     success_url = reverse_lazy('main:product_list')
+
+    def form_valid(self, form):
+        new_category_name = form.cleaned_data['new_category']
+
+        if new_category_name:
+            category, created = Category.objects.get_or_create(name=new_category_name, description='')
+            form.instance.category = category
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
 
 class ProductUpdateView(generic.UpdateView):
@@ -74,13 +89,9 @@ class ProductUpdateView(generic.UpdateView):
         return reverse('main:product_update', args=[self.get_object().pk])
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
-        if self.request.method == 'POST':
-            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
-        else:
-            context_data['formset'] = VersionFormset(instance=self.object)
-        return context_data
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
     def form_valid(self, form):
         context_data = self.get_context_data()
