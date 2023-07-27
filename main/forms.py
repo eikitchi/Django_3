@@ -14,7 +14,8 @@ class FormStyleMixin:
 class ProductForm(FormStyleMixin, forms.ModelForm):
     forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
     new_category = forms.CharField(max_length=150, required=False, label='Новая категория')
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Выберите категорию или создайте новую', required=False)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),
+                                      empty_label='Выберите категорию или создайте новую', required=False)
 
     class Meta:
         model = Product
@@ -35,7 +36,7 @@ class ProductForm(FormStyleMixin, forms.ModelForm):
         return cleaned_description
 
 
-class VersionForm(FormStyleMixin, forms.ModelForm):
+class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
         fields = '__all__'

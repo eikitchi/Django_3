@@ -36,6 +36,22 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Добавляем форму версии -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        Форма версии
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ version_form.as_p }}
+                            <input type="submit" class="btn btn-success" value="Сохранить версию">
+                        </form>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}

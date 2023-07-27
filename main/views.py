@@ -82,24 +82,39 @@ class ProductUpdateView(generic.UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'main/product_form_with_formset.html'
-    # fields = ('name', 'description', 'preview', 'category', 'price', 'date_create', 'date_change')
     success_url = reverse_lazy('main:product_list')
 
     def get_success_url(self, *args, **kwargs):
         return reverse('main:product_update', args=[self.get_object().pk])
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
+        context_data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+            context_data['version_form'] = VersionForm(self.request.POST)
+        else:
+            context_data['formset'] = VersionFormset(instance=self.object)
+            context_data['version_form'] = VersionForm()
+
+        return context_data
 
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
+        version_form = context_data['version_form']
+
         self.object = form.save()
+
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+
+        if version_form.is_valid():
+            version = version_form.save(commit=False)
+            version.name_of_product = self.object
+            version.save()
 
         return super().form_valid(form)
 
