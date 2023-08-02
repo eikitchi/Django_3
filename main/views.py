@@ -9,6 +9,7 @@ from django.views.generic import ListView
 from config import settings
 from main.forms import ProductForm, VersionForm
 from main.models import Product, Version, Category
+from main.services import get_category_subjects
 
 
 # Create your views here.
@@ -27,16 +28,15 @@ class ProductListView(generic.ListView):
     model = Product
     extra_context = {'title': 'Список продукции'}
 
-
-def products(request):
-    path = settings.MEDIA_ROOT
-    img_list = os.listdir(path + '/images')
-    context = {
-        'product_list': Product.objects.all(),
-        'title': 'Список продукции',
-        'images': img_list
-    }
-    return render(request, 'main/product_list.html', context)
+    def products(request):
+        path = settings.MEDIA_ROOT
+        img_list = os.listdir(path + '/images')
+        context = {
+            'product_list': Product.objects.all(),
+            'title': 'Список продукции',
+            'images': img_list
+        }
+        return render(request, 'main/product_list.html', context)
 
 
 class ProductDetailView(generic.DetailView):
@@ -126,6 +126,19 @@ class ProductDeleteView(generic.DeleteView):
 
 class VersionListView(ListView):
     model = Version
+
+
+class CategoriesListView(ListView):
+    model = Category
+    extra_context = {
+        'title': 'Все категории',
+        'object_list': Category.objects.all()
+    }
+
+    def get_context_data(self, **kwargs):  # меняет title на __str__.object (имя студента)
+        context_data = super().get_context_data(**kwargs)
+        context_data['subject_list'] = get_category_subjects  # логика вынесена в services.py ---------
+        return context_data
 
 
 def info(request):

@@ -1,0 +1,44 @@
+[
+  {
+    "model": "main.category",
+    "pk": 1,
+    "fields": {
+      "name": "1",
+      "description": ""
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 2,
+    "fields": {
+      "name": "Smartwatch",
+      "description": ""
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 2,
+    "fields": {
+      "name": "GoogleWatch",
+      "description": "",
+      "preview": "",
+      "category": 2,
+      "price": 10000,
+      "date_create": "2023-05-10T19:00:00Z",
+      "date_change": "2023-05-10T19:30:00Z"
+    }
+  },
+  {
+    "model": "main.product",
+    "pk": 3,
+    "fields": {
+      "name": "AppleWatch",
+      "description": "",
+      "preview": "",
+      "category": 2,
+      "price": 20000,
+      "date_create": "2023-05-10T20:00:00Z",
+      "date_change": "2023-05-10T21:10:00Z"
+    }
+  }
+]

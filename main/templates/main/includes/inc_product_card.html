@@ -2,13 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+</head>
+<body>
     <meta charset="UTF-8">
     {#    <title>{{ title }}</title>#}
     {% for object in product_list %}
         <div class="col-lg-4">
             <div class="card m-2 text-center">
                 <div class="card-body">
-                    {#            <img src="{% static "/media/images/apple.png" %}" alt="My image">#}
+                    {#            <img src="{% static "/media/images/apple.jpg" %}" alt="My image">#}
                     {% if  object.preview %}
                         <img src={{ object.preview.url }} class="rounded-circle" alt={{ object.name }} width="140"
                              height="140">
@@ -31,20 +33,32 @@
                         {% endfor %}
 
                     </ul>
-
+                    {% if user.is_authenticated %}
+{#                    {% if perms.main.view_product %}#}
                     <p><a class="btn btn-secondary" href="{% url 'main:product_item' object.pk %}" role="button">Подробнее
                         >></a></p>
+{#                    {% endif %}#}
+{#                    {% if user.is_authenticated and object.user == user.email %}#}
+{#                    {% if perms.main.change_product %}#}
+{#                    {% if user.email == product.user %}#}
+{#                        {% if object.user == user.email %}#}
+{#                        {% if perms.catalog.change_product and product.object.creator == object.user.email %}#}
+                    {% if user.email == object.user %}
                     <p><a class="btn btn-warning" href="{% url 'main:product_update' object.pk %}" role="button">Редактировать
                         >></a></p>
-                    <p><a class="btn btn-danger" href="{% url 'main:product_delete' object.pk %}" role="button">Удалить
-                        >></a></p>
-
+                    {% endif %}
+{#                    {% endif %}#}
+                    {% if user.is_superuser %}
+                    <p><a class="btn btn-danger" href="{% url 'main:product_delete' object.pk %}" role="button">Удалить>></a></p>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
+
     {% endfor %}
-</head>
-<body>
+
+
 
 </body>
 </html>

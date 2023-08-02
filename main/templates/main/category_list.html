@@ -1,0 +1,8 @@
+{% extends 'main/base.html' %} <!-- Выводит базовый html (верхняя, базовая часть сайта) -->
+
+{% block content %}  <!-- ШАБЛОННЫЙ ТЕГ for content -->
+    {% for category in object_list %}
+        <h6> Активная версия: {{ category.name }}</h6>
+        <h6> Номер версии: {{ category.description }}</h6>
+    {% endfor %}
+{% endblock %}
