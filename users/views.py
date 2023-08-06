@@ -116,18 +116,11 @@ def generate_new_password(request, email=None):
         recipient_list=[email],
         fail_silently=False
     )
-    # print(request.user.email)
-    # print(request.user)
-    # print(request.user.id)
-    # print(request.user.__dict__)
     user = User.objects.filter(email=email).first()
 
     user.set_password(new_password)
     user.save()
     return redirect(reverse('users:login'))
-    # request.user.set_password(new_password)
-    # request.user.save()
-    # return redirect(reverse('users:login'))
 
 
 def backup_pass(request):
@@ -137,82 +130,3 @@ def backup_pass(request):
     return render(request, 'users/backup_pass.html')
 
 
-# return redirect(reverse('users:login'))
-
-# def form_valid(self, form):
-#     if form.is_valid():
-#         self.object = form.save()
-#         self.object.is_active = False
-#         self.object.token = secrets.token_urlsafe(18)[:15]
-#         confirm_account(self.object)
-#         self.object.save()
-#         self.user_token = self.object.token
-#         self.object = form.save()
-#     return super().form_valid(form)
-
-# def get_success_url(self):
-#     new_url = super().get_success_url()
-#     token = self.object.token
-#     return str(new_url) + str(token)
-
-
-# def page_after_registration(request, token):
-#     if request.method == 'POST':
-#         obj = get_object_or_404(User, token=token)
-#         confirm_account(obj)
-#     return render(request, 'users/page_after_registration.html')
-#
-#
-# def activate_user(request, token):
-#     user = User.objects.filter(token=token).first()
-#     if user:
-#         user.is_active = True
-#         user.save()
-#         return redirect('users:login')
-#     return render(request, 'users/user_not_found.html')
-#
-
-
-# def generate_pass(request):
-#     if request.method == "POST":
-#         email = request.POST.get('email')
-#         generate_new_password(email)
-#
-#     return render(request, 'users/backup_pass.html')
-
-
-# def generate_new_password(request):
-#     pass_ch = secrets.token_urlsafe(18)[:9]
-#     send_mail(
-#         subject='Смена пароля',
-#         message=f'Ваш новый пароль {pass_ch}',
-#         from_email=settings.EMAIL_HOST_USER,
-#         recipient_list=[request.user.email]
-#     )
-#     # print(pass_ch)
-#     request.user.set_password(pass_ch)
-#     request.user.save()
-#     return redirect(reverse('users:login'))
-
-
-# class PasswordChangeView_(TemplateView):
-#     form_class = UserBackupForm
-#     success_url = reverse_lazy("users:generate_new_password")
-#     template_name = "users/backup_pass.html"
-#     success_message = 'Вы успешно сменили пароль. Проверьте почту!'
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context['title'] = 'Смена пароля на сгенерированный'
-#         return context
-#
-#     # def backup_pass(self, request):
-#     #     if request.method == "POST":
-#     #         email = request.POST.get('email')
-#     #         generate_new_password(email)
-#     #     return redirect(reverse('users:login'))
-#         # render(request, 'users/backup_pass.html')
-# class WebPasswordResetView(PasswordResetView):
-#     pass
-from django.shortcuts import render
-
-# Create your views here.

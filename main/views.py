@@ -1,5 +1,7 @@
 import os
 
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -13,6 +15,8 @@ from main.services import get_category_subjects
 
 
 # Create your views here.
+@login_required
+@permission_required('main:view_product')
 def home(request):
     path = settings.MEDIA_ROOT
     img_list = os.listdir(path + '/images')
@@ -24,7 +28,7 @@ def home(request):
     return render(request, 'main/home.html', context)
 
 
-class ProductListView(generic.ListView):
+class ProductListView(LoginRequiredMixin, generic.ListView):
     model = Product
     extra_context = {'title': 'Список продукции'}
 
@@ -39,7 +43,7 @@ class ProductListView(generic.ListView):
         return render(request, 'main/product_list.html', context)
 
 
-class ProductDetailView(generic.DetailView):
+class ProductDetailView(LoginRequiredMixin, generic.DetailView):
     model = Product
 
     def get_context_data(self, *args, **kwargs):
@@ -57,11 +61,12 @@ def product(request, pk):
     return render(request, 'main/product_detail.html', context)
 
 
-class ProductCreateView(generic.CreateView):
+class ProductCreateView(LoginRequiredMixin, PermissionRequiredMixin, generic.CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'main/product_form_with_formset.html'
     success_url = reverse_lazy('main:product_list')
+    permission_required = 'main.add_product'
 
     def form_valid(self, form):
         new_category_name = form.cleaned_data['new_category']
@@ -78,7 +83,7 @@ class ProductCreateView(generic.CreateView):
         return context
 
 
-class ProductUpdateView(generic.UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'main/product_form_with_formset.html'
@@ -119,7 +124,7 @@ class ProductUpdateView(generic.UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(generic.DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Product
     success_url = reverse_lazy('main:product_list')
 
@@ -141,6 +146,7 @@ class CategoriesListView(ListView):
         return context_data
 
 
+@login_required
 def info(request):
     context = {
         'title': 'Контакты',
