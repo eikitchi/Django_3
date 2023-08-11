@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% load sending_count %}
+{% load active_sending_count %}
+{% load active_customer_count %}
+{% block content %}
+
+    <div class="row gy-5">
+        <h5> Сервис рассылки сообщений</h5>
+
+        <div class="col">
+            <div class="card shadow-sm text-center" style="background: #e0e0e0">
+                <figure class="p-3 mb-0">
+                    Создано рассылок: {% sending_count %}.<br>
+                    <br>
+                    Количество активных рассылок: {% active_sending_count %}.<br>
+                    <br>
+                    Количество уникальных клиентов: {% active_customer_count %}
+                </figure>
+            </div>
+        </div>
+        {% for object in random_blog_posts %}
+            {% include 'blog/includes/inc_post_card.html' %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

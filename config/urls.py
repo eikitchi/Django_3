@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('main.urls', namespace='main')),
     path('', include('blog.urls', namespace='blog')),
     path('users/', include('users.urls', namespace='users')),
+    path('skychimp/', include('skychimp.urls', namespace='skychimp')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

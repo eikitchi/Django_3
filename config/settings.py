@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'main',
     'blog',
     'users',
+    'skychimp',
 ]
 
 MIDDLEWARE = [
@@ -158,3 +159,9 @@ CACHES = {
         "LOCATION": "unique-snowflake",  # Уникальное имя для кэша
     }
 }
+
+CRONJOBS = [
+    ('0 12 * * *', 'main.services.send_email', ['1 раз в день']),
+    ('0 12 * * 1', 'main.services.send_email', ['1 раз в неделю']),
+    ('0 12 1 * *', 'main.services.send_email', ['1 раз в месяц']),
+]
