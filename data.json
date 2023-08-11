@@ -1,0 +1,31 @@
+[
+  {
+    "model": "main.product",
+    "pk": 1,
+    "fields": {
+      "name": "видеокарта",
+      "description": "RTX 3070 8gb",
+      "preview": "",
+      "category": "комплектующие",
+      "price": 45000,
+      "date_create": "2023-07-03T08:02:48Z",
+      "date_change": "2023-07-03T08:02:53Z"
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 1,
+    "fields": {
+      "name": "комплектующие",
+      "description": "процессор, видеокарта"
+    }
+  },
+  {
+    "model": "main.category",
+    "pk": 2,
+    "fields": {
+      "name": "бытовая техника",
+      "description": "монитор"
+    }
+  }
+]
