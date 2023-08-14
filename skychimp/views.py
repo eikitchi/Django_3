@@ -16,15 +16,11 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Главная страница'
-
-        # Код для получения статистики и случайных статей из блога
         context['total_sendings'] = Sending.objects.count()
         context['active_sendings'] = Sending.objects.filter(status=Sending.LAUNCHED).count()
         context['unique_customers'] = Customer.objects.filter(clients__status=Sending.LAUNCHED).distinct().count()
         all_posts = list(Post.objects.all())
         context['random_blog_posts'] = sample(all_posts, min(3, len(all_posts)))
-
         return context
 
 
@@ -115,7 +111,7 @@ class SendingDetailView(LoginRequiredMixin, DetailView):
 
 class SendingCreateView(LoginRequiredMixin, CreateView):
     model = Sending
-    fields = ('message', 'frequency', 'status', 'created', 'scheduled_time', 'start_date', 'end_date',)
+    fields = ('message', 'frequency', 'status', 'scheduled_time', 'start_date', 'end_date',)
     success_url = reverse_lazy('skychimp:sending_list')
     try:
         for send in Sending.objects.all():

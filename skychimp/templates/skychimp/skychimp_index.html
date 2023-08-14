@@ -1,27 +1,21 @@
 {% extends 'main/base.html' %}
-
-{% load sending_count %}
-{% load active_sending_count %}
-{% load active_customer_count %}
+{% load mediapath %}
 {% block content %}
+<div class="container">
+    <h1>Главная страница</h1>
+    <p>Количество рассылок всего: {{ total_sendings }}</p>
+    <p>Количество активных рассылок: {{ active_sendings }}</p>
+    <p>Количество уникальных клиентов для рассылок: {{ unique_customers }}</p>
 
-    <div class="row gy-5">
-        <h5> Сервис рассылки сообщений</h5>
-
-        <div class="col">
-            <div class="card shadow-sm text-center" style="background: #e0e0e0">
-                <figure class="p-3 mb-0">
-                    Создано рассылок: {% sending_count %}.<br>
-                    <br>
-                    Количество активных рассылок: {% active_sending_count %}.<br>
-                    <br>
-                    Количество уникальных клиентов: {% active_customer_count %}
-                </figure>
-            </div>
-        </div>
-        {% for object in random_blog_posts %}
-            {% include 'blog/includes/inc_post_card.html' %}
+    <h2>Случайные статьи из блога</h2>
+    <ul>
+        {% for post in random_blog_posts %}
+        <li><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></li>
         {% endfor %}
-    </div>
+    </ul>
 
+    <a href="{% url 'skychimp:sending_list' %}" class="btn btn-primary">Просмотр списка рассылок</a>
+    <a href="{% url 'skychimp:sending_report' %}" class="btn btn-secondary">Отчет проведенных рассылок</a>
+    <a href="{% url 'skychimp:sending_create' %}" class="btn btn-success">Создание рассылки</a>
+</div>
 {% endblock %}
