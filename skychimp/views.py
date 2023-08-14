@@ -13,15 +13,18 @@ from skychimp.services import send_email
 
 class IndexView(TemplateView):
     template_name = 'skychimp/skychimp_index.html'
-    extra_context = {
-        'title': 'Главная страница',
-        'object_list': Sending.objects.all()
-    }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Главная страница'
+
+        # Код для получения статистики и случайных статей из блога
+        context['total_sendings'] = Sending.objects.count()
+        context['active_sendings'] = Sending.objects.filter(status=Sending.LAUNCHED).count()
+        context['unique_customers'] = Customer.objects.filter(clients__status=Sending.LAUNCHED).distinct().count()
         all_posts = list(Post.objects.all())
         context['random_blog_posts'] = sample(all_posts, min(3, len(all_posts)))
+
         return context
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date, datetime
+from datetime import date
 NULLABLE = {'null': True, 'blank': True}
 
 
@@ -39,7 +39,6 @@ class Sending(models.Model):
     MONTHLY = '1 раз в месяц'
 
     FREQUENCY_CHOICES = [
-
         (ONCE, 'Один раз'),
         (DAILY, '1 раз в день'),
         (WEEKLY, '1 раз в неделю'),
@@ -56,14 +55,13 @@ class Sending(models.Model):
     ]
 
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Сообщение')
-    # created_at = models.DateTimeField(auto_now_add=True)
-    scheduled_time = models.TimeField(default=datetime.now, verbose_name='Время рассылки')
+    scheduled_time = models.TimeField(null=True, blank=True, verbose_name='Время рассылки')
     start_date = models.DateField(default=date.today, verbose_name='Дата начала')
     end_date = models.DateField(default=date.today, verbose_name='Дата окончания')
-    frequency = models.CharField(max_length=14, choices=FREQUENCY_CHOICES, verbose_name='Периодичность')
-    status = models.CharField(max_length=50, default='Создана', choices=SELECT_STATUS, verbose_name='Статус')
-    created = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Кем создано',
-                                related_name='clients', **NULLABLE)
+    frequency = models.CharField(max_length=14, choices=FREQUENCY_CHOICES, default='Один раз', verbose_name='Периодичность')
+    status = models.CharField(max_length=50, choices=SELECT_STATUS, default=CREATED, verbose_name='Статус')
+    created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Кем создан',
+                                   related_name='clients', **NULLABLE)
 
     def __str__(self):
         return self.message.subject
@@ -73,7 +71,7 @@ class Sending(models.Model):
         verbose_name_plural = 'Рассылки'
         permissions = [
             ('set_send_status', 'Can set sending status'),
-                ]
+        ]
 
 
 class Attempt(models.Model):
@@ -89,6 +87,10 @@ class Attempt(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True, verbose_name='Время рассылки')
     status = models.CharField(choices=STATUS, verbose_name='Статус')
     response = models.TextField(**NULLABLE, verbose_name='Ответ сервера')
+
+    @property
+    def scheduled_time(self):
+        return self.sending.scheduled_time
 
     def __str__(self):
         return f"{self.sending.message.subject} - {self.sent_at}"
