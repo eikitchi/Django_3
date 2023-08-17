@@ -2,11 +2,14 @@ from random import sample
 
 import django
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import formset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import reverse, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from blog.models import Post
+from skychimp.forms import MessageForm, SendingForm
 from skychimp.models import *
 from skychimp.services import send_email
 
@@ -95,14 +98,14 @@ class MessageDeleteView(LoginRequiredMixin, DeleteView):
 class SendingListView(LoginRequiredMixin, ListView):
     model = Sending
     extra_context = {
-        'object_list': Sending.objects.all(),
         'title': 'Все Рассылки'  # дополнение к статической информации
     }
+
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.has_perm('skychimp.view_sending'):
             return queryset
-        return Sending.objects.filter(created=self.request.user)
+        return Sending.objects.filter(created_by=self.request.user)
 
 
 class SendingDetailView(LoginRequiredMixin, DetailView):
@@ -111,14 +114,29 @@ class SendingDetailView(LoginRequiredMixin, DetailView):
 
 class SendingCreateView(LoginRequiredMixin, CreateView):
     model = Sending
-    fields = ('message', 'frequency', 'status', 'scheduled_time', 'start_date', 'end_date',)
-    success_url = reverse_lazy('skychimp:sending_list')
-    try:
-        for send in Sending.objects.all():
-            if send.status == Sending.CREATED:
-                send_email(Sending.ONCE)
-    except django.db.utils.ProgrammingError:
-        print('ProgrammingError')
+    form_class = SendingForm
+    template_name = 'skychimp/sending_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message_formset'] = formset_factory(MessageForm, extra=1)  # Создаем формсет для сообщения
+        return context
+
+    def form_valid(self, form):
+        message_formset = formset_factory(MessageForm, extra=1)(
+            self.request.POST)  # Инициализируем формсет с данными из POST
+        if message_formset.is_valid():  # Проверяем валидность формсета
+            self.object = form.save(commit=False)
+            self.object.created_by = self.request.user
+            self.object.save()
+
+            for message_form in message_formset:
+                message = message_form.save()
+                self.object.message = message
+
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return self.render_to_response(self.get_context_data(form=form, message_formset=message_formset))
 
 
 class SendingUpdateView(LoginRequiredMixin, UpdateView):

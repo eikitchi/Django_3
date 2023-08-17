@@ -8,8 +8,11 @@
             <form action="" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="submit" class="btn btn-success"
-                       value="{% if object %}Сохранить{% else %} Создать {% endif %}">
+                {{ message_formset.management_form }}  <!-- Вставляем управляющие поля формсета -->
+                {% for message_form in message_formset %}
+                    {{ message_form.as_table }}  <!-- Отображаем каждую форму сообщения как таблицу -->
+                {% endfor %}
+                <input type="submit" class="btn btn-success" value="{% if object %}Сохранить{% else %} Создать {% endif %}">
             </form>
         </div>
         <div class="card-footer">

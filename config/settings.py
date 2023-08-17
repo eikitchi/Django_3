@@ -149,7 +149,7 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') #необходимо в настройках аккаунта яндекс, проставить галочки во вкладке "почтовые программы"
-EMAIL_USE_SSL = True
+EMAIL_USE_SSL = False
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == '1'
 

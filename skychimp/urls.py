@@ -11,7 +11,7 @@ app_name = SkychimpConfig.name
 
 
 urlpatterns = [
-    path('', never_cache(IndexView.as_view()), name='Index'),
+    path('', login_required(IndexView.as_view()), name='Index'),
     path('customer/', never_cache(CustomerListView.as_view()), name='customer_list'),
     path('<int:pk>/', cache_page(60)(CustomerDetailView.as_view()), name='customer_view'),
     path('customer/create/', cache_page(60)(CustomerCreateView.as_view()), name='customer_create'),
